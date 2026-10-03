@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبار قصص وحكايات الأطفال</title>
+<style>
+:root{--p:#6c5ce7;--g:#00b894;--r:#d63031;--ink:#263238;--muted:#6b7280;--line:#e7e9f2}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:linear-gradient(135deg,#f7f8fc,#eef1ff);color:var(--ink)}
+.wrap{width:min(950px,92%);margin:auto}.head{text-align:center;padding:30px 0 12px}.badge{display:inline-block;background:white;color:var(--p);padding:10px 18px;border-radius:30px;font-weight:bold;box-shadow:0 8px 25px #00000010}
+h1{font-size:clamp(26px,4vw,40px);margin:18px 0 8px}.muted{color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px;margin:20px 0;box-shadow:0 15px 45px #27346d12}
+.hidden{display:none!important}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field label{display:block;font-weight:bold;margin-bottom:8px}
+input[type=text]{width:100%;padding:15px;border:2px solid var(--line);border-radius:14px;font-size:16px}input[type=text]:focus{outline:none;border-color:var(--p)}
+button{border:0;border-radius:14px;padding:14px 22px;font-size:16px;font-weight:bold;cursor:pointer}.primary{background:var(--p);color:#fff}.green{background:var(--g);color:#fff}.light{background:#eef0ff;color:var(--p)}.red{background:#ffe9e9;color:var(--r)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.meta{display:flex;justify-content:space-between;color:var(--muted);font-weight:bold;margin-bottom:12px}
+.bar{height:10px;background:#e9ecf5;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--p),#a29bfe);transition:.3s}
+.question{font-size:22px;line-height:1.7;margin:20px 0}.option{display:flex;gap:12px;padding:15px;border:2px solid var(--line);border-radius:15px;margin:10px 0;cursor:pointer}.option:hover{background:#faf9ff;border-color:#b8b1ff}.option input{accent-color:var(--p);margin-top:5px}.correct{background:#eafff7!important;border-color:var(--g)!important}.wrong{background:#fff0f0!important;border-color:var(--r)!important}
+.feedback{margin-top:15px;padding:15px;border-radius:14px;line-height:1.8;font-weight:bold}.good{background:#eafff7;color:#087f5b}.bad{background:#fff0f0;color:#a61e1e}
+.score{text-align:center;font-size:55px;font-weight:900;color:var(--p)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}.stat{text-align:center;background:#f8f9ff;padding:18px;border-radius:16px}.stat b{display:block;font-size:25px;color:var(--p)}
+.review{margin-top:20px}.review-item{border:1px solid var(--line);border-radius:15px;padding:15px;margin:10px 0;line-height:1.8}.small{font-size:13px;color:var(--muted)}footer{text-align:center;color:var(--muted);padding:10px 0 35px;font-size:13px}
+@media(max-width:700px){.grid,.stats{grid-template-columns:1fr}.card{padding:20px}.question{font-size:19px}}@media print{.noprint{display:none!important}body{background:#fff}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head"><span class="badge">📚 اختبار إلكتروني تفاعلي</span><h1>قصص وحكايات الأطفال</h1><div class="muted">20 سؤالًا — تصحيح وتغذية راجعة فورية</div></div>
+
+<section id="start" class="card">
+<h2>بيانات الطالبة</h2><p class="muted">أدخلي البيانات التالية قبل بدء الاختبار.</p>
+<div class="grid">
+<div class="field"><label>اسم الطالبة *</label><input id="name" type="text" placeholder="الاسم بالكامل"></div>
+<div class="field"><label>الرقم الأكاديمي *</label><input id="id" type="text" placeholder="الرقم الأكاديمي"></div>
+</div>
+<div class="actions"><button class="primary" onclick="start()">بدء الاختبار 🚀</button></div>
+<p class="small">الاختبار مبني على المادة العلمية المرفقة.</p>
+</section>
+
+<section id="quiz" class="card hidden">
+<div class="meta"><span id="counter"></span><span id="live">الدرجة: 0</span></div>
+<div class="bar"><i id="bar"></i></div><div id="box"></div><div id="feed" class="feedback hidden"></div>
+<div class="actions noprint"><button id="check" class="primary" onclick="check()">تحقق من الإجابة</button><button id="next" class="green hidden" onclick="next()">السؤال التالي ←</button></div>
+</section>
+
+<section id="result" class="card hidden">
+<h2 style="text-align:center">نتيجة الاختبار</h2><h3 id="rname" style="text-align:center"></h3>
+<div id="rscore" class="score"></div><div id="rmsg" class="muted" style="text-align:center"></div>
+<div class="stats"><div class="stat"><b id="correct"></b>إجابة صحيحة</div><div class="stat"><b id="wrong"></b>إجابة غير صحيحة</div><div class="stat"><b id="pct"></b>النسبة</div></div>
+<div class="actions noprint"><button class="primary" onclick="review()">مراجعة الإجابات</button><button class="light" onclick="print()">طباعة النتيجة</button><button class="red" onclick="location.reload()">إعادة الاختبار</button></div>
+<div id="rev" class="review hidden"></div>
+</section>
+<footer>ملف HTML مستقل — جاهز للرفع على GitHub Pages.</footer>
+</div>
+
+<script>
+const questions=[{"q": "ما الوظيفة الأساسية للحكاية في التراث الإنساني؟", "options": ["التسلية فقط", "أداة معرفية وسيكولوجية لنقل الخبرات والقيم", "تعليم الحساب فقط", "عرض التاريخ السياسي فقط"], "answer": 1, "feedback": "الحكاية أداة معرفية وسيكولوجية صيغت من خلالها الخبرات ونُقلت القيم."}, {"q": "أي خاصية تعني أن الحكاية تبدأ من الأزمة وتتجه نحو الحل؟", "options": ["البعد الرمزي", "المرونة والامتداد", "البناء الديناميكي", "الأنسنة"], "answer": 2, "feedback": "البناء الديناميكي يعتمد على خط درامي يبدأ من الأزمة ويتجه نحو الحل."}, {"q": "تتميز القصة الشعبية بأنها غالبًا:", "options": ["معلومة المؤلف", "مجهولة المؤلف", "مكتوبة لطفل واحد", "علمية فقط"], "answer": 1, "feedback": "القصة الشعبية موروث شفاهي أنتجته الجماعة الشعبية وتناقلته الأجيال."}, {"q": "أي نوع يدور على ألسنة الحيوانات والطيور ويحمل مغزى أخلاقيًا؟", "options": ["الواقعية", "السحرية", "حكايات الحيوان", "التاريخية"], "answer": 2, "feedback": "حكايات الحيوان تستخدم الحيوانات والطيور لتحمل مغزى أخلاقيًا غير مباشر."}, {"q": "ما نتيجة الانتقال من المشافهة إلى التدوين؟", "options": ["اختفاء الحكايات", "استقرار النص وإتاحة فحصه وتنقيته تربويًا", "منع الخيال", "تحويل كل القصص إلى واقعية"], "answer": 1, "feedback": "أدى التدوين إلى استقرار النص الحكائي وإتاحة فحصه وتنقيته من المضامين غير المناسبة."}, {"q": "من وضع حجر الأساس لأدب الأطفال المدون عام 1697 وفق المادة؟", "options": ["جان جاك روسو", "شارل بيرو", "أحمد شوقي", "كامل كيلاني"], "answer": 1, "feedback": "تذكر المادة شارل بيرو عام 1697 ومجموعته «حكايات أمي الإوزة»."}, {"q": "من لُقّب في المادة برائد أدب الأطفال في العالم العربي؟", "options": ["أحمد نجيب", "رفاعة الطهطاوي", "كامل كيلاني", "أحمد شوقي"], "answer": 2, "feedback": "تصف المادة كامل كيلاني بأنه رائد أدب الأطفال في العالم العربي."}, {"q": "ما المرحلة التي شهدت ظهور مجلات مثل «سمير» و«ميكي» في مصر؟", "options": ["المرحلة التأسيسية", "مرحلة المجلات والصحافة المتخصصة", "المرحلة الرقمية", "مرحلة المشافهة"], "answer": 1, "feedback": "شهد منتصف القرن العشرين طفرة في المجلات الطفولية والصحافة المتخصصة."}, {"q": "أي اتجاه حديث يمزج النص بالصوت والرسوم المتحركة والمؤثرات التفاعلية؟", "options": ["القصص الرقمية والتفاعلية", "القصص التاريخية", "الحكايات الشعبية", "القصص الواقعية"], "answer": 0, "feedback": "القصص الرقمية والتفاعلية تمزج النص بالصوت والرسوم المتحركة والمؤثرات."}, {"q": "كيف يجب أن تكون حبكة القصة الموجهة لطفل الروضة؟", "options": ["معقدة ومتعددة الأزمنة", "خطية ومباشرة وتدور حول فكرة واحدة", "غامضة دائمًا", "تعتمد على الفلاش باك"], "answer": 1, "feedback": "ينبغي أن تكون الحبكة خطية ومباشرة وبفكرة واحدة واضحة."}, {"q": "وفق المادة، ما النسبة التي لا تقل عنها مساحة الرسوم والألوان في صفحات كتاب طفل الروضة؟", "options": ["30%", "50%", "70%", "90%"], "answer": 2, "feedback": "تذكر المادة أن الرسوم والألوان تشغل ما لا يقل عن 70% من مساحة صفحات الكتاب."}, {"q": "ما المقصود بقصص الأطفال؟", "options": ["أي قصة يقرأها الطفل", "عمل أدبي وفني وثقافي مصمم ليتناسب مع الخصائص النمائية للأطفال", "قصص تاريخية فقط", "قصص بلا صور"], "answer": 1, "feedback": "قصص الأطفال تصمم من حيث المضمون واللغة والإخراج البصري بما يناسب خصائص الأطفال النمائية."}, {"q": "أي نوع يربط الطفل بجذوره الثقافية والاجتماعية وتاريخ شعبه؟", "options": ["القصص الشعبية", "القصص الفكاهية", "القصص الرقمية", "القصص العلمية"], "answer": 0, "feedback": "القصص الشعبية تربط الطفل بجذوره الثقافية والاجتماعية وتاريخ شعبه."}, {"q": "أي نوع يوظف الحقائق العلمية في قالب قصصي مشوق؟", "options": ["القصص العلمية", "الفكاهية", "الشعبية", "الدينية فقط"], "answer": 0, "feedback": "القصص العلمية توظف الحقائق العلمية في قالب قصصي مشوق."}, {"q": "ما الأهمية الأساسية للقصص التعليمية؟", "options": ["استبدال اللعب بالتلقين", "دمج اللعب والترفيه بالتعلم وتحقيق أهداف تعليمية", "إبعاد الطفل عن التكنولوجيا", "زيادة صعوبة المفاهيم"], "answer": 1, "feedback": "القصص التعليمية تدمج اللعب والترفيه بالتعلم وتحقق أهدافًا تعليمية سلوكية محددة."}, {"q": "أي مجال يشمل إثراء الحصيلة اللفظية وتنمية الاستماع والتعبير الشفهي؟", "options": ["الأهمية اللغوية", "الجمالية", "الاجتماعية", "الأخلاقية"], "answer": 0, "feedback": "الأهمية اللغوية تشمل إثراء المفردات والاستماع والتعبير الشفهي."}, {"q": "ما المقصود بالتطهير والانفراج الانفعالي؟", "options": ["زيادة المخاوف", "مساعدة الطفل على التحرر من التوترات والمخاوف الداخلية", "تعليم الحساب", "تنمية التذوق اللوني"], "answer": 1, "feedback": "تساعد القصة الطفل على التحرر من التوترات والمخاوف الداخلية."}, {"q": "أي هدف يرتبط بالتعاون واللعب التشاركي واحترام أدوار الزملاء؟", "options": ["الجمالي", "الاجتماعي", "المعرفي", "اللغوي"], "answer": 1, "feedback": "هذه أهداف اجتماعية مرتبطة بالعمل الجماعي والمشاركة واحترام الآخرين."}, {"q": "أي مما يلي يمثل هدفًا إبداعيًا؟", "options": ["تحفيز الخيال التوليدي والتفكير التباعدي", "الحفظ فقط", "إلغاء النهايات البديلة", "تقليل التساؤل"], "answer": 0, "feedback": "من الأهداف الإبداعية تحفيز الخيال التوليدي وتنمية التفكير التباعدي."}, {"q": "ما فائدة القصص الرقمية والإلكترونية؟", "options": ["منع التفاعل", "إتاحة التفاعل مع العناصر واختيار مسار النهاية", "إلغاء الصوت والرسوم", "النص فقط"], "answer": 1, "feedback": "تتيح القصص الرقمية التفاعل مع العناصر واختيار مسار نهاية القصة."}];
+let n=0,score=0,locked=false,answers=[];
+function start(){
+ if(!document.getElementById('name').value.trim()||!document.getElementById('id').value.trim()){alert('من فضلك اكتبي اسم الطالبة والرقم الأكاديمي.');return}
+ document.getElementById('start').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');render();
+}
+function render(){
+ locked=false;let q=questions[n];
+ document.getElementById('counter').textContent='السؤال '+(n+1)+' من '+questions.length;
+ document.getElementById('live').textContent='الدرجة: '+score;
+ document.getElementById('bar').style.width=(n/questions.length*100)+'%';
+ document.getElementById('feed').className='feedback hidden';
+ document.getElementById('check').classList.remove('hidden');document.getElementById('next').classList.add('hidden');
+ let s='<div class="question">'+q.q+'</div>';
+ q.options.forEach((x,i)=>s+='<label class="option" id="o'+i+'"><input type="radio" name="a" value="'+i+'"><span>'+x+'</span></label>');
+ document.getElementById('box').innerHTML=s;
+}
+function check(){
+ if(locked)return;let el=document.querySelector('input[name=a]:checked');if(!el){alert('اختاري إجابة أولًا.');return}
+ locked=true;let v=+el.value,q=questions[n],ok=v===q.answer;answers[n]=v;if(ok)score++;
+ document.querySelectorAll('.option').forEach((x,i)=>{x.style.pointerEvents='none';if(i===q.answer)x.classList.add('correct');if(i===v&&i!==q.answer)x.classList.add('wrong')});
+ let f=document.getElementById('feed');f.className='feedback '+(ok?'good':'bad');f.innerHTML=(ok?'✅ إجابة صحيحة! ':'❌ إجابة غير صحيحة. ')+q.feedback;
+ document.getElementById('check').classList.add('hidden');document.getElementById('next').classList.remove('hidden');document.getElementById('live').textContent='الدرجة: '+score;
+}
+function next(){if(n<questions.length-1){n++;render()}else finish()}
+function finish(){
+ document.getElementById('quiz').classList.add('hidden');document.getElementById('result').classList.remove('hidden');
+ let total=questions.length,p=Math.round(score/total*100);
+ document.getElementById('rname').textContent=document.getElementById('name').value.trim();
+ document.getElementById('rscore').textContent=score+' / '+total;
+ document.getElementById('correct').textContent=score;document.getElementById('wrong').textContent=total-score;document.getElementById('pct').textContent=p+'%';
+ document.getElementById('rmsg').textContent=p>=90?'ممتاز جدًا 🌟':p>=75?'أداء جيد جدًا 👏':p>=60?'أداء جيد، مع الحاجة إلى مراجعة بعض النقاط.':'تحتاجين إلى مراجعة المادة والمحاولة مرة أخرى.';
+}
+function review(){
+ let d=document.getElementById('rev');d.classList.toggle('hidden');if(d.classList.contains('hidden'))return;
+ let s='<h3>مراجعة الإجابات</h3>';
+ questions.forEach((q,i)=>{let ok=answers[i]===q.answer;s+='<div class="review-item"><b>'+(i+1)+'. '+q.q+'</b><br><strong style="color:'+(ok?'#087f5b':'#a61e1e')+'">'+(ok?'✓ صحيحة':'✗ غير صحيحة')+'</strong><br><span class="small">إجابتك: '+(q.options[answers[i]]||'لم تتم الإجابة')+'<br>الإجابة الصحيحة: '+q.options[q.answer]+'<br>'+q.feedback+'</span></div>'});
+ d.innerHTML=s;
+}
+</script>
+</body></html>
